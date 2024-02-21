@@ -2,20 +2,21 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { createAccessToken } from "../libs/jwt.js";
+import { TOKEN_SECRET } from "../config.js";
 
 
 
 //REGISTRAR USUARIO
 export const register = async (req, res) => {
+
+  const { username, email, password } = req.body;
+
   try {
-    const { username, email, password } = req.body;
-
     const userFound = await User.findOne({ email });
-
     if (userFound)
-      return res.status(400).json({
-        message: ["The email is already in use"],
-      });
+      return res.status(400).json(["The email already exists"],
+      );
+
 
     // hashing the password
     const passwordHash = await bcrypt.hash(password, 10);
@@ -59,15 +60,13 @@ export const login = async (req, res) => {
     const userFound = await User.findOne({ email });
 
     if (!userFound)
-      return res.status(400).json({
-        message: ["The email does not exist"],
-      });
+      return res.status(400).json(["The email does not exist"],
+      );
 
     const isMatch = await bcrypt.compare(password, userFound.password);
     if (!isMatch) {
-      return res.status(400).json({
-        message: ["The password is incorrect"],
-      });
+      return res.status(400).json(["The password is incorrect"],
+      );
     }
 
     const token = await createAccessToken({
@@ -75,11 +74,7 @@ export const login = async (req, res) => {
       username: userFound.username,
     });
 
-    res.cookie("token", token, {
-      httpOnly: process.env.NODE_ENV !== "development",
-      secure: true,
-      sameSite: "none",
-    });
+    res.cookie("token", token);
 
     res.json({
       id: userFound._id,
@@ -92,14 +87,16 @@ export const login = async (req, res) => {
 };
 
 export const verifyToken = async (req, res) => {
-  const { token } = req.cookies;
-  if (!token) return res.send(false);
 
-  jwt.verify(token, TOKEN_SECRET, async (error, user) => {
-    if (error) return res.sendStatus(401);
+  const { token } = req.cookies;
+
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+  jwt.verify(token, TOKEN_SECRET, async (err, user) => {
+    if (err) return res.status(401).json({ message: "Unauthorized" });
 
     const userFound = await User.findById(user.id);
-    if (!userFound) return res.sendStatus(401);
+    if (!userFound) return res.status(401).json({ message: "Unauthorized" });
 
     return res.json({
       id: userFound._id,
@@ -107,7 +104,8 @@ export const verifyToken = async (req, res) => {
       email: userFound.email,
     });
   });
-};
+}
+
 
 //LOGOUT
 
@@ -132,3 +130,4 @@ export const profile = async (req, res) => {
     updatedAt: userFound.updatedAt,
   });
 }
+
