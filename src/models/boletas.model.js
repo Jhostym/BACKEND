@@ -10,7 +10,7 @@ const boletasSchema = new mongoose.Schema(
     mes: {
       type: String,
     },
-    año: {
+    year: {
       type: String,
     },
     image: {

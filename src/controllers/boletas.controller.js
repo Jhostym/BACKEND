@@ -30,14 +30,14 @@ export const getBoletasPorDni = async (req, res) => {
 
 export const createBoletas = async (req, res) => {
 
-  const { dni, mes, año } = req.body;
+  const { dni, mes, year } = req.body;
 
   try {
 
     const newBoleta = new Boleta({
       dni,
       mes,
-      año,
+      year,
     });
 
     if (req.files?.image) {
