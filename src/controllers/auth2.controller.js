@@ -22,7 +22,7 @@ export const register = async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
 
     // creating the user
-    const newEmployee= new Employee({
+    const newEmployee = new Employee({
       dni,
       name,
       password: passwordHash,
@@ -46,8 +46,8 @@ export const register = async (req, res) => {
     res.json({
       id: userSaved._id,
       dni: userSaved.dni,
-      name: userSaved.name, 
-      role: userSaved.role,     
+      name: userSaved.name,
+      role: userSaved.role,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -75,6 +75,7 @@ export const login = async (req, res) => {
     const token = await createAccessToken({
       id: userFound._id,
       name: userFound.name,
+      dni: userFound.dni,
     });
 
     res.cookie("token", token);
@@ -121,16 +122,15 @@ export const logout = (req, res) => {
 };
 
 
+
 export const profile = async (req, res) => {
-  const userFound = await Employee.findById(req.user.id)
+  try {
+    const user = await Employee.find(
 
-  if (!userFound) return res.sendStatus(401).json({ message: "User not found" });
-
-  return res.json({
-    id: userFound._id,
-    dni: userFound.dni,
-    name: userFound.name,
-    role: userFound.role,
-  });
-}
+    );
+    return res.json(user);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 

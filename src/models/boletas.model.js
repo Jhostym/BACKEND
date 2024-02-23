@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { object } from "zod";
 
 const boletasSchema = new mongoose.Schema(
   {
@@ -15,7 +16,7 @@ const boletasSchema = new mongoose.Schema(
     image: {
       secure_url: String,
       public_id: String
-    }
+    },
   },
   {
     timestamps: true,

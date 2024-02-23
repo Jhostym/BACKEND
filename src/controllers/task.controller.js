@@ -20,13 +20,11 @@ export const createTasks = async (req, res) => {
       date,
     } = req.body;
 
-    console.log(req.user)
-
     const newTask = new Task({
       title,
       description,
       date,
-      user: req.user.id
+      user: req.user._id
     });
 
     const savedTask = await newTask.save();

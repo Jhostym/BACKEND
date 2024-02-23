@@ -12,12 +12,28 @@ export const getBoletas = async (req, res) => {
   }
 };
 
-export const createBoletas = async (req, res) => {
-  const { dni, mes, año } = req.body;
 
-  if (!dni) return res.status(404).json({ message: 'dni is required' })
+// Define tu controlador
+export const getBoletasPorDni = async (req, res) => {
+  const dni = req.user.dni; // Obtiene el DNI del usuario autenticado
 
   try {
+    // Obtiene todas las boletas asociadas al usuario autenticado
+    const boletas = await Boleta.find({ dni });
+
+    res.json( boletas );
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener las boletas', error: error.message });
+  }
+};
+
+
+export const createBoletas = async (req, res) => {
+
+  const { dni, mes, año } = req.body;
+
+  try {
+
     const newBoleta = new Boleta({
       dni,
       mes,
@@ -32,7 +48,6 @@ export const createBoletas = async (req, res) => {
       }
       await fs.unlink(req.files.image.tempFilePath)
     }
-
     const savedBoleta = await newBoleta.save();
     return res.json(savedBoleta);
   } catch (error) {
