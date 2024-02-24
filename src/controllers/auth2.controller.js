@@ -3,7 +3,7 @@ import Employee from "../models/employee.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { createAccessToken } from "../libs/jwt.js";
-//import { TOKEN_SECRET } from "../config.js";
+import { TOKEN_SECRET } from "../config.js";
 
 
 
@@ -97,7 +97,7 @@ export const verifyToken = async (req, res) => {
 
   if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-  jwt.verify(token, 22314121, async (err, user) => {
+  jwt.verify(token, TOKEN_SECRET, async (err, user) => {
     if (err) return res.status(401).json({ message: "Unauthorized" });
 
     const userFound = await Employee.findById(user.id);
