@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { getBoletas, createBoletas, getBoletasPorDni } from "../controllers/boletas.controller.js";
 import fileUpload from "express-fileupload";
-import { validatedni } from "../middlewares/validateDni.js";
+import { validatedni } from "../middlewares/validateDNI.js";
 
 const router = Router();
 
