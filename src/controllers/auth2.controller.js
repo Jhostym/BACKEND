@@ -35,10 +35,11 @@ export const register = async (req, res) => {
     // create access token
     const token = await createAccessToken({
       id: userSaved._id,
+      dni : userSaved.dni,
     });
 
     res.cookie("token", token, {
-      httpOnly: true,
+      httpOnly: process.env.NODE_ENV !== "development",
       secure: true,
       sameSite: "none",
     });
@@ -76,7 +77,7 @@ export const login = async (req, res) => {
       id: userFound._id,
       name: userFound.name,
       dni: userFound.dni,
-    },);
+    });
 
     res.cookie("token", token);
 
