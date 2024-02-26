@@ -12,6 +12,6 @@ router.post("/boletas",fileUpload({
     tempFileDir: "./uploads",
 }),createBoletas);
 
-router.get("/boletasdni",validatedni ,getBoletasPorDni)
+router.get("/boletasdni",getBoletasPorDni)
 
 export default router;
