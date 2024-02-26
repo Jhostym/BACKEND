@@ -35,10 +35,14 @@ export const register = async (req, res) => {
     // create access token
     const token = await createAccessToken({
       id: userSaved._id,
-      dni : userSaved.dni,
+      dni: userSaved.dni,
     });
 
-    res.cookie("token", token)
+    res.cookie("token", token, {
+      httpOnly: process.env.NODE_ENV !== "development",
+      secure: true,
+      sameSite: "none",
+    });
 
     res.json({
       id: userSaved._id,
@@ -75,10 +79,10 @@ export const login = async (req, res) => {
       dni: userFound.dni,
     });
 
-    res.cookie("token", token,{
-      httpOnly: true,
+    res.cookie("token", token, {
+      httpOnly: process.env.NODE_ENV !== "development",
       secure: true,
-      sameSite: 'none'
+      sameSite: "none",
     });
 
     res.json({
@@ -93,24 +97,23 @@ export const login = async (req, res) => {
 };
 
 export const verifyToken = async (req, res) => {
-
   const { token } = req.cookies;
+  if (!token) return res.send(false);
 
-  if (!token) return res.status(401).json({ message: "Unauthorized" });
-
-  jwt.verify(token, TOKEN_SECRET, async (err, user) => {
-    if (err) return res.status(401).json({ message: "Unauthorized" });
+  jwt.verify(token, TOKEN_SECRET, async (error, user) => {
+    if (error) return res.sendStatus(401);
 
     const userFound = await Employee.findById(user.id);
-    if (!userFound) return res.status(401).json({ message: "Unauthorized" });
+    if (!userFound) return res.sendStatus(401);
 
     return res.json({
       id: userFound._id,
-      name: userFound.name,
-      dni: userFound.dni,
+      username: userFound.username,
+      email: userFound.email,
     });
   });
-}
+};
+
 
 
 //LOGOUT
