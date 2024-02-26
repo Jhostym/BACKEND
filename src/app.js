@@ -13,7 +13,7 @@ import productRoutes from './routes/products.routes.js';
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'https://frontend-o78n.onrender.com',
   credentials: true,
 }));
 app.use(morgan('dev'));
