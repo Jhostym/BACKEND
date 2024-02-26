@@ -38,7 +38,7 @@ export const register = async (req, res) => {
     });
 
     res.cookie("token", token, {
-      httpOnly: process.env.NODE_ENV !== "development",
+      httpOnly: true,
       secure: true,
       sameSite: "none",
     });
@@ -76,7 +76,7 @@ export const login = async (req, res) => {
       id: userFound._id,
       name: userFound.name,
       dni: userFound.dni,
-    });
+    },);
 
     res.cookie("token", token);
 
