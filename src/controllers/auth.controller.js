@@ -38,7 +38,8 @@ export const register = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: !(process.env.MODO === "developer"),
+      sameSite: "none",
+      secure: true,
     });
 
     res.json({

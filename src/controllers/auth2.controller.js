@@ -38,11 +38,7 @@ export const register = async (req, res) => {
       dni : userSaved.dni,
     });
 
-    res.cookie("token", token, {
-      httpOnly: process.env.NODE_ENV !== "development",
-      secure: true,
-      sameSite: "none",
-    });
+    res.cookie("token", token)
 
     res.json({
       id: userSaved._id,
