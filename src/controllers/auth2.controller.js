@@ -96,7 +96,7 @@ export const login = async (req, res) => {
 
 export const verifyToken = async (req, res) => {
   const { token } = req.cookies;
-  if (!token) return res.send(false);
+  if (!token) return res.sendStatus(401);
 
   jwt.verify(token, TOKEN_SECRET, async (error, user) => {
     if (error) return res.sendStatus(401);
@@ -122,7 +122,6 @@ export const logout = (req, res) => {
   })
   return res.sendStatus(200);
 };
-
 
 
 export const profile = async (req, res) => {
