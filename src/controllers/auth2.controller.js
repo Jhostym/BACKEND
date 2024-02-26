@@ -75,7 +75,11 @@ export const login = async (req, res) => {
       dni: userFound.dni,
     });
 
-    res.cookie("token", token);
+    res.cookie("token", token,{
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none'
+    });
 
     res.json({
       id: userFound._id,
