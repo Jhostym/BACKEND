@@ -63,12 +63,12 @@ export const login = async (req, res) => {
     const userFound = await Employee.findOne({ dni });
 
     if (!userFound)
-      return res.status(400).json(["The dni does not exist"],
+      return res.status(400).json(["El dni o la contraseña son incorrectos"],
       );
 
     const isMatch = await bcrypt.compare(password, userFound.password);
     if (!isMatch) {
-      return res.status(400).json(["The password is incorrect"],
+      return res.status(400).json(["El dni o la contraseña son incorrectos"],
       );
     }
 
@@ -79,6 +79,7 @@ export const login = async (req, res) => {
     });
 
     res.cookie("token", token, {
+      httpOnly: process.env.NODE_ENV !== "development",
       secure: true,
       sameSite: "none",
     });
@@ -106,8 +107,9 @@ export const verifyToken = async (req, res) => {
 
     return res.json({
       id: userFound._id,
-      username: userFound.username,
-      email: userFound.email,
+      name: userFound.name,
+      dni: userFound.dni,
+      role: userFound.role,
     });
   });
 };

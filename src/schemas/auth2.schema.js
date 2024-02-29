@@ -21,13 +21,10 @@ export const registerSchema = z.object({
 export const loginSchema = z.object({
   dni: z
     .string({
-      required_error: 'Email is required',
+      required_error: 'el dni es requerido',
     }),
   password: z
     .string({
-      required_error: 'Password is required',
+      required_error: 'la contraseña es requerida',
     })
-    .min(6, {
-      message: 'Password must be at least 6 characters long',
-    }),
 });
