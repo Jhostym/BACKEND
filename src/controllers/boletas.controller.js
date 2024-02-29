@@ -75,30 +75,3 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-export const deleteProduct = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deletedProduct = await Product.findByIdAndDelete(id);
-
-    if (!deletedProduct) return res.status(404).json({ message: 'Product does not exists' })
-
-    await deleteImage(deletedProduct.image.public_id)
-
-    return res.json(deletedProduct);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
-
-export const getProduct = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const productFound = await Product.findById(id);
-    if (!productFound)
-      return res.status(404).json({ message: "Product not found" });
-    return res.json(productFound);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
-

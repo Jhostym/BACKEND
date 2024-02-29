@@ -9,13 +9,15 @@ const boletasSchema = new mongoose.Schema(
     },
     mes: {
       type: String,
+      required: true,
     },
     year: {
       type: String,
+      required: true,
     },
     image: {
       secure_url: String,
-      public_id: String
+      public_id: String,
     },
   },
   {
